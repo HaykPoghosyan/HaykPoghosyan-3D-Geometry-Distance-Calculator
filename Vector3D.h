@@ -30,8 +30,12 @@ public:
     double GetY() const noexcept;
     double GetZ() const noexcept;
     
+    // Get the underlying Point3D
+    const Point3D& GetPoint() const noexcept;
+    
     // Operations
     [[nodiscard]] double Length() const noexcept;
+    [[nodiscard]] double LengthSquared() const noexcept;
     [[nodiscard]] double Dot(const Vector3D& other) const noexcept;
     [[nodiscard]] Vector3D Cross(const Vector3D& other) const noexcept;
     [[nodiscard]] Vector3D Normalize() const noexcept;

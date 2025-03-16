@@ -22,10 +22,7 @@ double Segment3D::PointToSegmentDistance(const Point3D& point, const Segment3D& 
 {
     // Vector from start to end of segment
     const Vector3D segmentVector(segment.GetStart(), segment.GetEnd());
-    const double segmentLengthSquared = 
-        segmentVector.GetX() * segmentVector.GetX() + 
-        segmentVector.GetY() * segmentVector.GetY() + 
-        segmentVector.GetZ() * segmentVector.GetZ();
+    const double segmentLengthSquared = segmentVector.LengthSquared();
     
     // If segment is just a point, return distance to that point
     if (segmentLengthSquared == 0.0) 
@@ -38,9 +35,7 @@ double Segment3D::PointToSegmentDistance(const Point3D& point, const Segment3D& 
     
     // Project startToPoint onto segmentVector
     const double t = std::max(0.0, std::min(1.0, 
-        (startToPoint.GetX() * segmentVector.GetX() + 
-         startToPoint.GetY() * segmentVector.GetY() + 
-         startToPoint.GetZ() * segmentVector.GetZ()) / segmentLengthSquared));
+        startToPoint.Dot(segmentVector) / segmentLengthSquared));
     
     // Calculate the closest point on the segment
     const Point3D closestPoint(

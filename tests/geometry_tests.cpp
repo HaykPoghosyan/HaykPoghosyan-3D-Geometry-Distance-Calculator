@@ -68,6 +68,59 @@ TEST(Point3DTest, Operators)
     EXPECT_DOUBLE_EQ(scaled2.GetZ(), 9.0);
 }
 
+/**
+ * Tests Point3D addition with zero
+ * Verifies that adding a zero point doesn't change the original point
+ */
+TEST(Point3DTest, AdditionWithZero)
+{
+    Point3D p(1.0, 2.0, 3.0);
+    Point3D zero;
+    
+    Point3D result = p + zero;
+    
+    EXPECT_DOUBLE_EQ(result.GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(result.GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(result.GetZ(), 3.0);
+}
+
+/**
+ * Tests Point3D subtraction resulting in zero
+ * Verifies that subtracting a point from itself results in a zero vector
+ */
+TEST(Point3DTest, SubtractionToZero)
+{
+    Point3D p(1.0, 2.0, 3.0);
+    
+    Point3D result = p - p;
+    
+    EXPECT_DOUBLE_EQ(result.GetX(), 0.0);
+    EXPECT_DOUBLE_EQ(result.GetY(), 0.0);
+    EXPECT_DOUBLE_EQ(result.GetZ(), 0.0);
+}
+
+/**
+ * Tests Point3D scalar multiplication with identity
+ * Verifies that multiplying by 1 doesn't change the point
+ */
+TEST(Point3DTest, ScalarMultiplicationIdentity)
+{
+    Point3D p(1.0, 2.0, 3.0);
+    
+    Point3D result = p * 1.0;
+    
+    EXPECT_DOUBLE_EQ(result.GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(result.GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(result.GetZ(), 3.0);
+    
+    // Test commutative property
+    Point3D result2 = 1.0 * p;
+    
+    EXPECT_DOUBLE_EQ(result2.GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(result2.GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(result2.GetZ(), 3.0);
+}
+
 // Vector3D Tests
 /**
  * Tests Vector3D initialization and methods with positive components
@@ -146,6 +199,102 @@ TEST(Vector3DTest, ConstructFromPoint)
     EXPECT_DOUBLE_EQ(v2.GetZ(), 7.0);
 }
 
+/**
+ * Tests Vector3D LengthSquared method
+ * Verifies that the squared length is calculated correctly
+ */
+TEST(Vector3DTest, LengthSquared)
+{
+    Vector3D v(3.0, 4.0, 0.0);
+    EXPECT_DOUBLE_EQ(v.LengthSquared(), 25.0); // 3² + 4² + 0² = 25
+    
+    Vector3D v2(1.0, 2.0, 2.0);
+    EXPECT_DOUBLE_EQ(v2.LengthSquared(), 9.0); // 1² + 2² + 2² = 9
+}
+
+/**
+ * Tests Vector3D Length method
+ * Verifies that the length is calculated correctly
+ */
+TEST(Vector3DTest, Length)
+{
+    Vector3D v(3.0, 4.0, 0.0);
+    EXPECT_DOUBLE_EQ(v.Length(), 5.0); // sqrt(3² + 4² + 0²) = 5
+    
+    Vector3D v2(1.0, 1.0, 1.0);
+    EXPECT_DOUBLE_EQ(v2.Length(), std::sqrt(3.0)); // sqrt(1² + 1² + 1²) = sqrt(3)
+}
+
+/**
+ * Tests Vector3D Normalize method
+ * Verifies that the normalized vector has length 1 and correct direction
+ */
+TEST(Vector3DTest, Normalize)
+{
+    Vector3D v(3.0, 4.0, 0.0);
+    Vector3D normalized = v.Normalize();
+    
+    // Length should be 1
+    EXPECT_NEAR(normalized.Length(), 1.0, 1e-10);
+    
+    // Direction should be preserved
+    EXPECT_DOUBLE_EQ(normalized.GetX(), 0.6); // 3/5
+    EXPECT_DOUBLE_EQ(normalized.GetY(), 0.8); // 4/5
+    EXPECT_DOUBLE_EQ(normalized.GetZ(), 0.0);
+    
+    // Test zero vector
+    Vector3D zero;
+    Vector3D normalizedZero = zero.Normalize();
+    EXPECT_DOUBLE_EQ(normalizedZero.GetX(), 0.0);
+    EXPECT_DOUBLE_EQ(normalizedZero.GetY(), 0.0);
+    EXPECT_DOUBLE_EQ(normalizedZero.GetZ(), 0.0);
+}
+
+/**
+ * Tests Vector3D Cross product method
+ * Verifies that the cross product is perpendicular to both input vectors
+ * and has the correct magnitude
+ */
+TEST(Vector3DTest, CrossProduct)
+{
+    Vector3D v1(1.0, 0.0, 0.0); // x-axis
+    Vector3D v2(0.0, 1.0, 0.0); // y-axis
+    
+    Vector3D cross = v1.Cross(v2);
+    
+    // Should be z-axis
+    EXPECT_DOUBLE_EQ(cross.GetX(), 0.0);
+    EXPECT_DOUBLE_EQ(cross.GetY(), 0.0);
+    EXPECT_DOUBLE_EQ(cross.GetZ(), 1.0);
+    
+    // Should be perpendicular to both input vectors
+    EXPECT_DOUBLE_EQ(cross.Dot(v1), 0.0);
+    EXPECT_DOUBLE_EQ(cross.Dot(v2), 0.0);
+    
+    // Magnitude should be |v1|*|v2|*sin(90°) = 1*1*1 = 1
+    EXPECT_DOUBLE_EQ(cross.Length(), 1.0);
+    
+    // Test anti-commutativity: v1 × v2 = -(v2 × v1)
+    Vector3D crossReverse = v2.Cross(v1);
+    EXPECT_DOUBLE_EQ(crossReverse.GetX(), -cross.GetX());
+    EXPECT_DOUBLE_EQ(crossReverse.GetY(), -cross.GetY());
+    EXPECT_DOUBLE_EQ(crossReverse.GetZ(), -cross.GetZ());
+}
+
+/**
+ * Tests Vector3D GetPoint method
+ * Verifies that the underlying Point3D is correctly returned
+ */
+TEST(Vector3DTest, GetPoint)
+{
+    Vector3D v(1.0, 2.0, 3.0);
+    const Point3D& p = v.GetPoint();
+    
+    EXPECT_DOUBLE_EQ(p.GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(p.GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(p.GetZ(), 3.0);
+}
+
 // Segment3D Tests
 /**
  * Tests distance calculation between non-intersecting segments
@@ -214,4 +363,77 @@ TEST(Segment3DTest, ZeroPointToSegmentDistance)
     Point3D point(1, 0, 0); // Point on the segment
     
     EXPECT_DOUBLE_EQ(Segment3D::PointToSegmentDistance(point, segment), 0.0);
+}
+
+/**
+ * Tests Segment3D constructor and getters
+ * Verifies that the start and end points are correctly stored and retrieved
+ */
+TEST(Segment3DTest, ConstructorAndGetters)
+{
+    Point3D start(1.0, 2.0, 3.0);
+    Point3D end(4.0, 5.0, 6.0);
+    
+    Segment3D segment(start, end);
+    
+    EXPECT_DOUBLE_EQ(segment.GetStart().GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(segment.GetStart().GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(segment.GetStart().GetZ(), 3.0);
+    
+    EXPECT_DOUBLE_EQ(segment.GetEnd().GetX(), 4.0);
+    EXPECT_DOUBLE_EQ(segment.GetEnd().GetY(), 5.0);
+    EXPECT_DOUBLE_EQ(segment.GetEnd().GetZ(), 6.0);
+}
+
+/**
+ * Tests Segment3D distance to point for closest point at segment endpoint
+ * Verifies that when the closest point is at an endpoint, the distance is calculated correctly
+ */
+TEST(Segment3DTest, PointToSegmentDistanceEndpoint)
+{
+    Point3D start(0.0, 0.0, 0.0);
+    Point3D end(1.0, 0.0, 0.0);
+    Segment3D segment(start, end);
+    
+    // Point closest to start endpoint
+    Point3D point1(-1.0, 1.0, 0.0);
+    EXPECT_NEAR(Segment3D::PointToSegmentDistance(point1, segment), std::sqrt(2.0), 1e-10);
+    
+    // Point closest to end endpoint
+    Point3D point2(2.0, 1.0, 0.0);
+    EXPECT_NEAR(Segment3D::PointToSegmentDistance(point2, segment), std::sqrt(2.0), 1e-10);
+}
+
+/**
+ * Tests Segment3D distance between parallel segments
+ * Verifies that the distance between parallel segments is calculated correctly
+ */
+TEST(Segment3DTest, ParallelSegmentsDistance)
+{
+    Point3D start1(0.0, 0.0, 0.0);
+    Point3D end1(1.0, 0.0, 0.0);
+    Segment3D segment1(start1, end1);
+    
+    Point3D start2(0.0, 1.0, 0.0);
+    Point3D end2(1.0, 1.0, 0.0);
+    Segment3D segment2(start2, end2);
+    
+    EXPECT_DOUBLE_EQ(Segment3D::Distance(segment1, segment2), 1.0);
+}
+
+/**
+ * Tests Segment3D distance between perpendicular segments
+ * Verifies that the distance between perpendicular segments is calculated correctly
+ */
+TEST(Segment3DTest, PerpendicularSegmentsDistance)
+{
+    Point3D start1(0.0, 0.0, 0.0);
+    Point3D end1(0.0, 1.0, 0.0);
+    Segment3D segment1(start1, end1);
+    
+    Point3D start2(1.0, 0.0, 0.0);
+    Point3D end2(1.0, 1.0, 0.0);
+    Segment3D segment2(start2, end2);
+    
+    EXPECT_DOUBLE_EQ(Segment3D::Distance(segment1, segment2), 1.0);
 } 

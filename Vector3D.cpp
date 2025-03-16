@@ -31,35 +31,47 @@ double Vector3D::GetZ() const noexcept
     return m_point.GetZ();
 }
 
+const Point3D& Vector3D::GetPoint() const noexcept
+{
+    return m_point;
+}
+
 double Vector3D::Length() const noexcept
 {
-    const double x = m_point.GetX();
-    const double y = m_point.GetY();
-    const double z = m_point.GetZ();
-    return std::sqrt(x * x + y * y + z * z);
+    return std::sqrt(this->LengthSquared());
+}
+
+double Vector3D::LengthSquared() const noexcept
+{
+    return this->Dot(*this);
 }
 
 double Vector3D::Dot(const Vector3D& other) const noexcept
-{
-    return m_point.GetX() * other.GetX() + 
-           m_point.GetY() * other.GetY() + 
-           m_point.GetZ() * other.GetZ();
+{   
+    return this->GetX() * other.GetX() + 
+           this->GetY() * other.GetY() + 
+           this->GetZ() * other.GetZ();
 }
 
 Vector3D Vector3D::Cross(const Vector3D& other) const noexcept
 {
     return Vector3D(
-        m_point.GetY() * other.GetZ() - m_point.GetZ() * other.GetY(),
-        m_point.GetZ() * other.GetX() - m_point.GetX() * other.GetZ(),
-        m_point.GetX() * other.GetY() - m_point.GetY() * other.GetX()
+        this->GetY() * other.GetZ() - this->GetZ() * other.GetY(),
+        this->GetZ() * other.GetX() - this->GetX() * other.GetZ(),
+        this->GetX() * other.GetY() - this->GetY() * other.GetX()
     );
 }
 
 Vector3D Vector3D::Normalize() const noexcept
 {
-    const double len = Length();
+    const double len = this->Length();
+    
     if (len == 0) return Vector3D();
     
     const double invLen = 1.0 / len;
-    return Vector3D(m_point * invLen);
+    return Vector3D(
+        this->GetX() * invLen,
+        this->GetY() * invLen,
+        this->GetZ() * invLen
+    );
 } 

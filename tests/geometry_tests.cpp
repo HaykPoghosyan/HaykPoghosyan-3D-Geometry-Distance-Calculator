@@ -34,6 +34,40 @@ TEST(Point3DTest, NegativeCoordinates)
     EXPECT_DOUBLE_EQ(p.GetZ(), -3.0);
 }
 
+/**
+ * Tests Point3D operators for addition, subtraction, and scalar multiplication
+ * Verifies that the operators correctly perform the expected operations
+ */
+TEST(Point3DTest, Operators)
+{
+    Point3D p1(1.0, 2.0, 3.0);
+    Point3D p2(4.0, 5.0, 6.0);
+    
+    // Test addition
+    Point3D sum = p1 + p2;
+    EXPECT_DOUBLE_EQ(sum.GetX(), 5.0);
+    EXPECT_DOUBLE_EQ(sum.GetY(), 7.0);
+    EXPECT_DOUBLE_EQ(sum.GetZ(), 9.0);
+    
+    // Test subtraction
+    Point3D diff = p2 - p1;
+    EXPECT_DOUBLE_EQ(diff.GetX(), 3.0);
+    EXPECT_DOUBLE_EQ(diff.GetY(), 3.0);
+    EXPECT_DOUBLE_EQ(diff.GetZ(), 3.0);
+    
+    // Test scalar multiplication (point * scalar)
+    Point3D scaled1 = p1 * 2.0;
+    EXPECT_DOUBLE_EQ(scaled1.GetX(), 2.0);
+    EXPECT_DOUBLE_EQ(scaled1.GetY(), 4.0);
+    EXPECT_DOUBLE_EQ(scaled1.GetZ(), 6.0);
+    
+    // Test scalar multiplication (scalar * point)
+    Point3D scaled2 = 3.0 * p1;
+    EXPECT_DOUBLE_EQ(scaled2.GetX(), 3.0);
+    EXPECT_DOUBLE_EQ(scaled2.GetY(), 6.0);
+    EXPECT_DOUBLE_EQ(scaled2.GetZ(), 9.0);
+}
+
 // Vector3D Tests
 /**
  * Tests Vector3D initialization and methods with positive components
@@ -87,6 +121,29 @@ TEST(Vector3DTest, NegativeDotProduct)
     Vector3D v1(1.0, 1.0, 1.0);
     Vector3D v2(-1.0, -1.0, -1.0);
     EXPECT_DOUBLE_EQ(v1.Dot(v2), -3.0); // Opposite vectors, negative dot product
+}
+
+/**
+ * Tests Vector3D construction from Point3D
+ * Verifies that the Vector3D correctly uses Point3D for its implementation
+ */
+TEST(Vector3DTest, ConstructFromPoint)
+{
+    Point3D p(1.0, 2.0, 3.0);
+    Vector3D v(p);
+    
+    EXPECT_DOUBLE_EQ(v.GetX(), 1.0);
+    EXPECT_DOUBLE_EQ(v.GetY(), 2.0);
+    EXPECT_DOUBLE_EQ(v.GetZ(), 3.0);
+    
+    // Test vector construction from two points
+    Point3D start(1.0, 1.0, 1.0);
+    Point3D end(4.0, 6.0, 8.0);
+    Vector3D v2(start, end);
+    
+    EXPECT_DOUBLE_EQ(v2.GetX(), 3.0);
+    EXPECT_DOUBLE_EQ(v2.GetY(), 5.0);
+    EXPECT_DOUBLE_EQ(v2.GetZ(), 7.0);
 }
 
 // Segment3D Tests

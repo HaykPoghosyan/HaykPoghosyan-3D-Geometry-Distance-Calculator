@@ -2,48 +2,56 @@
 #include <cmath>
 
 Vector3D::Vector3D(const double x, const double y, const double z) noexcept
-    : m_x(x), m_y(y), m_z(z)
+    : m_point(x, y, z)
+{
+}
+
+Vector3D::Vector3D(const Point3D& point) noexcept
+    : m_point(point)
 {
 }
 
 Vector3D::Vector3D(const Point3D& start, const Point3D& end) noexcept
-    : m_x(end.GetX() - start.GetX()),
-      m_y(end.GetY() - start.GetY()),
-      m_z(end.GetZ() - start.GetZ())
+    : m_point(end - start)
 {
 }
 
 double Vector3D::GetX() const noexcept
 {
-    return m_x;
+    return m_point.GetX();
 }
 
 double Vector3D::GetY() const noexcept
 {
-    return m_y;
+    return m_point.GetY();
 }
 
 double Vector3D::GetZ() const noexcept
 {
-    return m_z;
+    return m_point.GetZ();
 }
 
 double Vector3D::Length() const noexcept
 {
-    return std::sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
+    const double x = m_point.GetX();
+    const double y = m_point.GetY();
+    const double z = m_point.GetZ();
+    return std::sqrt(x * x + y * y + z * z);
 }
 
 double Vector3D::Dot(const Vector3D& other) const noexcept
 {
-    return m_x * other.m_x + m_y * other.m_y + m_z * other.m_z;
+    return m_point.GetX() * other.GetX() + 
+           m_point.GetY() * other.GetY() + 
+           m_point.GetZ() * other.GetZ();
 }
 
 Vector3D Vector3D::Cross(const Vector3D& other) const noexcept
 {
     return Vector3D(
-        m_y * other.m_z - m_z * other.m_y,
-        m_z * other.m_x - m_x * other.m_z,
-        m_x * other.m_y - m_y * other.m_x
+        m_point.GetY() * other.GetZ() - m_point.GetZ() * other.GetY(),
+        m_point.GetZ() * other.GetX() - m_point.GetX() * other.GetZ(),
+        m_point.GetX() * other.GetY() - m_point.GetY() * other.GetX()
     );
 }
 
@@ -53,5 +61,5 @@ Vector3D Vector3D::Normalize() const noexcept
     if (len == 0) return Vector3D();
     
     const double invLen = 1.0 / len;
-    return Vector3D(m_x * invLen, m_y * invLen, m_z * invLen);
+    return Vector3D(m_point * invLen);
 } 

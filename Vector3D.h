@@ -6,11 +6,12 @@
 class Vector3D 
 {
 private:
-    double m_x, m_y, m_z;
+    Point3D m_point; // Using Point3D instead of raw coordinates
 
 public:
     // Constructors
     explicit Vector3D(const double x = 0.0, const double y = 0.0, const double z = 0.0) noexcept;
+    explicit Vector3D(const Point3D& point) noexcept;
     Vector3D(const Point3D& start, const Point3D& end) noexcept;
     
     // Destructor
@@ -30,10 +31,10 @@ public:
     double GetZ() const noexcept;
     
     // Operations
-    double Length() const noexcept;
-    double Dot(const Vector3D& other) const noexcept;
-    Vector3D Cross(const Vector3D& other) const noexcept;
-    Vector3D Normalize() const noexcept;
+    [[nodiscard]] double Length() const noexcept;
+    [[nodiscard]] double Dot(const Vector3D& other) const noexcept;
+    [[nodiscard]] Vector3D Cross(const Vector3D& other) const noexcept;
+    [[nodiscard]] Vector3D Normalize() const noexcept;
 };
 
 #endif // VECTOR3D_H 

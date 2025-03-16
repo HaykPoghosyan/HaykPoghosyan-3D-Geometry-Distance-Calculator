@@ -25,6 +25,14 @@ public:
     double GetX() const noexcept;
     double GetY() const noexcept;
     double GetZ() const noexcept;
+    
+    // Operators
+    Point3D operator+(const Point3D& other) const noexcept;
+    Point3D operator-(const Point3D& other) const noexcept;
+    Point3D operator*(double scalar) const noexcept;
 };
+
+// Non-member operator for scalar * Point3D
+Point3D operator*(double scalar, const Point3D& point) noexcept;
 
 #endif // POINT3D_H 
